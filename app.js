@@ -77,7 +77,7 @@ const APP = {
     if (target) target.classList.add('active');
 
     const navbar = document.getElementById('navbar');
-    if (page === 'dashboard' || page === 'login') {
+    if (page === 'dashboard' || page === 'login' || page === 'loginAdmin') {
       navbar.style.display = 'none';
     } else {
       navbar.style.display = 'flex';
@@ -140,15 +140,27 @@ const APP = {
   // ---- Auth ----
   login(e) {
     e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+    const formId = e.target.id;
+    let username, password;
+
+    if (formId === 'formLoginAdmin') {
+      username = document.getElementById('loginAdminUsername').value.trim();
+      password = document.getElementById('loginAdminPassword').value.trim();
+    } else {
+      username = document.getElementById('loginUsername').value.trim();
+      password = document.getElementById('loginPassword').value.trim();
+    }
 
     const user = DB.login(username, password);
     if (user) {
       this.currentUser = user;
       this.updateNavbar();
       this.toast('Login berhasil! Selamat datang, ' + user.nama, 'success');
-      this.navigate('penilaian');
+      if (user.pos === 0) {
+        this.navigate('peserta');
+      } else {
+        this.navigate('penilaian');
+      }
     } else {
       this.toast('Username atau password salah!', 'error');
     }

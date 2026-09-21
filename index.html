@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unesa Summer Camp 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" id="navbar" style="display:none;">
+    <div class="navbar-brand">Unesa <span>Summer Camp</span> 2026</div>
+    <ul class="nav-links" id="navLinks"></ul>
+    <div class="nav-right">
+      <span class="nav-user" id="navUser"></span>
+      <a class="btn-login" id="navLoginBtn" onclick="APP.navigate('login')" style="display:none;">Login</a>
+      <button class="btn-logout" id="navLogoutBtn" onclick="APP.logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- ============ PAGE: DASHBOARD ============ -->
+  <div class="page active" id="page-dashboard">
+    <div class="dashboard">
+      <div class="logo-container">
+        <div class="logo-text">Unesa Summer Camp</div>
+        <div class="logo-sub">Penilaian Permainan & Games</div>
+        <div class="logo-year">2026</div>
+      </div>
+      <div class="dashboard-menu">
+        <div class="menu-card" onclick="APP.navigate('login')">
+          <div class="icon">&#128100;</div>
+          <div class="label">Login Juri</div>
+        </div>
+        <div class="menu-card" onclick="APP.navigate('peserta')">
+          <div class="icon">&#128221;</div>
+          <div class="label">Input Peserta</div>
+        </div>
+        <div class="menu-card" onclick="APP.navigate('tim')">
+          <div class="icon">&#127942;</div>
+          <div class="label">Input Tim</div>
+        </div>
+        <div class="menu-card" onclick="APP.navigate('penilaian')">
+          <div class="icon">&#11088;</div>
+          <div class="label">Input Penilaian</div>
+        </div>
+        <div class="menu-card" onclick="APP.navigate('leaderboard')">
+          <div class="icon">&#127941;</div>
+          <div class="label">Leaderboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: LOGIN ============ -->
+  <div class="page" id="page-login">
+    <div class="login-wrapper">
+      <div class="login-box">
+        <h2>&#128100; Login Juri</h2>
+        <form id="formLogin" onsubmit="APP.login(event)">
+          <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password / PIN</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <div style="margin-top:16px;text-align:center;">
+          <a href="#" onclick="APP.navigate('dashboard');return false;" style="color:var(--text-light);font-size:0.85rem;">&#8592; Kembali ke Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: PESERTA ============ -->
+  <div class="page" id="page-peserta">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">&#128221; Input Nama Peserta</h2>
+        </div>
+
+        <div class="form-group">
+          <label for="pesertaTeam">Pilih Team</label>
+          <select id="pesertaTeam" class="form-control" onchange="APP.renderPesertaList()">
+            <option value="1">Team 1</option>
+            <option value="2">Team 2</option>
+            <option value="3">Team 3</option>
+            <option value="4">Team 4</option>
+            <option value="5">Team 5</option>
+            <option value="6">Team 6</option>
+            <option value="7">Team 7</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display:flex;gap:8px;">
+          <input type="text" id="pesertaNama" class="form-control" placeholder="Nama peserta..." style="flex:1;" autocomplete="off">
+          <button type="button" class="btn btn-accent" onclick="APP.addPeserta()">Tambah</button>
+        </div>
+
+        <ul class="peserta-list" id="pesertaList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: TIM ============ -->
+  <div class="page" id="page-tim">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">&#127942; Input Nama Tim</h2>
+        </div>
+
+        <div class="form-group">
+          <label for="timTeam">Pilih Team</label>
+          <select id="timTeam" class="form-control" onchange="APP.renderTimForm()">
+            <option value="1">Team 1</option>
+            <option value="2">Team 2</option>
+            <option value="3">Team 3</option>
+            <option value="4">Team 4</option>
+            <option value="5">Team 5</option>
+            <option value="6">Team 6</option>
+            <option value="7">Team 7</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="timNama">Nama Tim</label>
+          <input type="text" id="timNama" class="form-control" placeholder="Contoh: Macan Putih" autocomplete="off">
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="APP.saveNamaTim()">Simpan Nama Tim</button>
+
+        <div style="margin-top:24px;">
+          <h3 style="font-size:1rem;margin-bottom:12px;color:var(--text-light);">Daftar Tim Saat Ini:</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Nama Tim</th>
+                  <th>Jumlah Anggota</th>
+                </tr>
+              </thead>
+              <tbody id="timTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: PENILAIAN ============ -->
+  <div class="page" id="page-penilaian">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">&#11088; Input Penilaian</h2>
+          <span id="penilaianJuri" style="font-size:0.85rem;color:var(--text-light);"></span>
+        </div>
+
+        <div class="tab-bar" id="posTabBar">
+          <button class="tab-btn active" onclick="APP.selectPos(1)">Pos 1 - Ular Naga</button>
+          <button class="tab-btn" onclick="APP.selectPos(2)">Pos 2 - Jembatan Kayu</button>
+          <button class="tab-btn" onclick="APP.selectPos(3)">Pos 3 - Leader Drill</button>
+          <button class="tab-btn" onclick="APP.selectPos(4)">Pos 4 - Lompat Karet</button>
+        </div>
+
+        <div class="form-group">
+          <label for="penilaianTeam">Pilih Team</label>
+          <select id="penilaianTeam" class="form-control" onchange="APP.loadExistingNilai()">
+            <option value="1">Team 1</option>
+            <option value="2">Team 2</option>
+            <option value="3">Team 3</option>
+            <option value="4">Team 4</option>
+            <option value="5">Team 5</option>
+            <option value="6">Team 6</option>
+            <option value="7">Team 7</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Hasil Pertandingan</label>
+          <div class="hasil-btn-group" id="hasilBtnGroup">
+            <button type="button" class="hasil-btn hasil-menang" onclick="APP.selectHasil('Menang')">&#9989; Menang (3 poin)</button>
+            <button type="button" class="hasil-btn hasil-seri" onclick="APP.selectHasil('Seri')">&#128528; Seri (1 poin)</button>
+            <button type="button" class="hasil-btn hasil-kalah" onclick="APP.selectHasil('Kalah')">&#10060; Kalah (0 poin)</button>
+          </div>
+          <input type="hidden" id="penilaianHasil" value="">
+        </div>
+
+        <div class="form-group">
+          <label for="penilaianCatatan">Catatan (opsional)</label>
+          <textarea id="penilaianCatatan" class="form-control" rows="2" placeholder="Keterangan tambahan..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="APP.simpanNilai()">Simpan Hasil</button>
+
+        <div style="margin-top:24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <h3 style="font-size:1rem;color:var(--text-light);margin:0;">Rekap Nilai Semua Team:</h3>
+            <button type="button" class="btn btn-sm btn-danger" onclick="APP.clearAllPenilaian()">Hapus Semua Nilai</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pos</th>
+                  <th>Team 1</th>
+                  <th>Team 2</th>
+                  <th>Team 3</th>
+                  <th>Team 4</th>
+                  <th>Team 5</th>
+                  <th>Team 6</th>
+                  <th>Team 7</th>
+                </tr>
+              </thead>
+              <tbody id="rekapTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE: LEADERBOARD ============ -->
+  <div class="page" id="page-leaderboard">
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">&#127941; Leaderboard</h2>
+          <button class="btn btn-sm btn-outline" onclick="APP.renderLeaderboard()">&#8635; Refresh</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Nama Tim</th>
+                <th>Pos 1</th>
+                <th>Pos 2</th>
+                <th>Pos 3</th>
+                <th>Pos 4</th>
+                <th>Total Poin</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

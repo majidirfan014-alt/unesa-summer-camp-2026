@@ -21,7 +21,8 @@ const APP = {
   currentPos: 1,
   selectedHasil: '',
 
-  init() {
+  async init() {
+    this.showLoading(true);
     this.currentUser = DB.getLoggedIn();
     this.updateNavbar();
 
@@ -47,11 +48,25 @@ const APP = {
       });
     }
 
+    await DB.init();
+    this.showLoading(false);
+
     if (this.currentUser) {
       this.navigate('penilaian');
     } else {
       this.navigate('dashboard');
     }
+  },
+
+  showLoading(show) {
+    let el = document.getElementById('loadingOverlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'loadingOverlay';
+      el.innerHTML = '<div class="loading-spinner"></div>';
+      document.body.appendChild(el);
+    }
+    el.style.display = show ? 'flex' : 'none';
   },
 
   navigate(page) {
@@ -92,7 +107,6 @@ const APP = {
     const isAdmin = this.currentUser && this.currentUser.pos === 0;
     const isLoggedIn = !!this.currentUser;
 
-    // Show/hide Login vs Logout
     navLoginBtn.style.display = isLoggedIn ? 'none' : 'inline-flex';
     navLogoutBtn.style.display = isLoggedIn ? 'inline-flex' : 'none';
 
@@ -168,7 +182,7 @@ const APP = {
     `).join('');
   },
 
-  addPeserta() {
+  async addPeserta() {
     const tId = parseInt(document.getElementById('pesertaTeam').value);
     const input = document.getElementById('pesertaNama');
     const nama = input.value.trim();
@@ -179,16 +193,16 @@ const APP = {
       return;
     }
 
-    DB.addPeserta(tId, nama);
+    await DB.addPeserta(tId, nama);
     input.value = '';
     input.focus();
     this.renderPesertaList();
     this.toast('Peserta berhasil ditambahkan!', 'success');
   },
 
-  removePeserta(tId, index) {
+  async removePeserta(tId, index) {
     if (confirm('Hapus peserta ini?')) {
-      DB.removePeserta(tId, index);
+      await DB.removePeserta(tId, index);
       this.renderPesertaList();
       this.toast('Peserta dihapus.', 'info');
     }
@@ -213,7 +227,7 @@ const APP = {
     `).join('');
   },
 
-  saveNamaTim() {
+  async saveNamaTim() {
     const tId = parseInt(document.getElementById('timTeam').value);
     const nama = document.getElementById('timNama').value.trim();
 
@@ -222,7 +236,7 @@ const APP = {
       return;
     }
 
-    DB.setNamaTim(tId, nama);
+    await DB.setNamaTim(tId, nama);
     this.renderTimTable();
     this.toast('Nama tim berhasil disimpan!', 'success');
   },
@@ -276,7 +290,7 @@ const APP = {
     }
   },
 
-  simpanNilai() {
+  async simpanNilai() {
     const pos = this.currentPos;
     const tId = parseInt(document.getElementById('penilaianTeam').value);
     const hasil = document.getElementById('penilaianHasil').value;
@@ -288,7 +302,7 @@ const APP = {
     }
 
     const juriName = this.currentUser ? this.currentUser.nama : 'Admin';
-    DB.setNilai(pos, tId, hasil, juriName, catatan);
+    await DB.setNilai(pos, tId, hasil, juriName, catatan);
 
     this.renderRekapTable();
     const poin = DB.POIN[hasil];
@@ -324,9 +338,9 @@ const APP = {
     tbody.innerHTML = html;
   },
 
-  clearAllPenilaian() {
+  async clearAllPenilaian() {
     if (!confirm('Hapus SEMUA data penilaian? Tindakan ini tidak dapat dibatalkan.')) return;
-    DB.clearPenilaian();
+    await DB.clearPenilaian();
     this.renderRekapTable();
     this.loadExistingNilai();
     this.toast('Semua data penilaian berhasil dihapus.', 'info');

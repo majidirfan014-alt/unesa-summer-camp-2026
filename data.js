@@ -158,11 +158,14 @@ const DB = {
   // ---- AUTH (localStorage still used for session) ----
   login(username, password) {
     const juriList = [
-      { username: 'juri1', password: '1234', nama: 'Juri Pos 1 - Ular Naga', pos: 1 },
-      { username: 'juri2', password: '1234', nama: 'Juri Pos 2 - Jembatan Kayu', pos: 2 },
-      { username: 'juri3', password: '1234', nama: 'Juri Pos 3 - Leader Drill', pos: 3 },
-      { username: 'juri4', password: '1234', nama: 'Juri Pos 4 - Lompat Karet', pos: 4 },
-      { username: 'admin', password: 'admin', nama: 'Admin', pos: 0 }
+      { username: 'juri1', password: '123', nama: 'Juri Pos 1 - Ular Naga', pos: 1 },
+      { username: 'juri2', password: '123', nama: 'Juri Pos 2 - Jembatan Kayu', pos: 2 },
+      { username: 'juri3', password: '123', nama: 'Juri Pos 3 - Leader Drill', pos: 3 },
+      { username: 'juri4', password: '123', nama: 'Juri Pos 4 - Lompat Karet', pos: 4 },
+      { username: 'juri5', password: '123', nama: 'Juri Pos 5', pos: 5 },
+      { username: 'juri6', password: '123', nama: 'Juri Pos 6', pos: 6 },
+      { username: 'juri7', password: '123', nama: 'Juri Pos 7', pos: 7 },
+      { username: 'admin', password: 'admin123', nama: 'Admin', pos: 0 }
     ];
     const found = juriList.find(j => j.username === username && j.password === password);
     if (found) {
